@@ -8,6 +8,12 @@ fi
 
 tamCadena=$1
 
+if ! [[ "$tamCadena" =~ ^[0-9]+$ ]]
+then
+    echo "Error, el primer argumento debe ser un número entero."
+    exit -1
+fi
+
 if [ $tamCadena -le 0 ]
 then
     echo "Error, el primer argumento debe ser positivo."
@@ -36,6 +42,8 @@ else
         fi
     done
 fi
+# for(( i=0; i<$numCadena; i++ ))
+# ..tamAleatorio=$(( $lengthminCadena + (RANDOM % ($lengthmaxCadena - $lengthminCadena +1)) ))
 
 if [ "$tipoCadena" == "alfa" ]
 then
@@ -48,15 +56,8 @@ else
 fi
 
 cadena=$(tr -dc $op < /dev/urandom | head -c $tamCadena)
-
+# ...cadena=$(tr -dc $op < /dev/urandom | head -c $tamAleatorio)
+# ....echo $cadena
+#tr filtra el flujo infinito de datos aleatorios de /dev/urandom dejando solo los caracteres permitidos en $op, y head corta ese flujo al llegar a la longitud $tamCadena.
 echo $cadena
 
-# echo "Introduce un caracter: "
-# read -t 5 -n 1 caracter
-
-# if [ -z $caracter ]
-# then
-#     caracter="a"
-# fi
-
-# echo "El caracter es $caracter"

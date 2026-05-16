@@ -22,14 +22,13 @@ then
     mkdir $directorioDestino
 fi
 
-#creo el nombre que tendrá el fichero final
 directoriOrigenSinBarra=$(basename $directorioOrigen)
 fecha=$(date +%Y%m%d)
 nombreFinal=$directoriOrigenSinBarra"_"$USER"_"$fecha".tar"
 
 if [ $compresion -eq 1 ]
 then
-    nombreFinal=$nombreFinal".gz"
+    nombreFinal=$nombreFinal".tar" #esto lo he cambiado antes ponia ".gz"
 fi
 
 if [ -e $directorioDestino/$nombreFinal ]
@@ -46,13 +45,23 @@ then
     fi
 fi
 
+#gestion de q los ficheros se guarden con una antiguedad < q x segundos
+# find "$directorioDestino" -type f -name "*.tar.gz" -mmin +5 -delete
+# find "$directorioDestino" -type f -name "*.tar.gz" -mmin -5 > "$fichero"
 #creo la copia
+
 if [ $compresion -eq 1 ]
 then
     tar -czf $nombreFinal $directorioOrigen
+    # c=crear, z=comprimir(gzip), f=fichero //COMPRIMIR
+
 else
     tar -cf $nombreFinal $directorioOrigen
+    # c=crear, f=fichero //ARCHIVAR
 fi
-
+# tar -czf "$directorioDestino/$nombreFinal" "$directorioOrigen"
+# echo "Copia realizada en $directorioDestino/$nombreFinal."
 mv $nombreFinal $directorioDestino
 echo "Copia realizada en $directorioDestino/$nombreFinal."
+
+# numaleatorio=$(((RANDOM % 900)+100))

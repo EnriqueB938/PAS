@@ -15,6 +15,8 @@ fi
 directorio=$1
 fichero=$(mktemp)
 
+#find $directorio -type f -name "*.txt" > $fichero
+
 find $directorio > $fichero
 
 while read linea
@@ -23,12 +25,20 @@ do
     then
     nombre=$(basename $linea)
     ruta=$(realpath $linea)
+    # longitud=${#ruta}
     bytes=$(stat -c %s $linea)
     permisos=$(stat -c %A $linea)
+    # propietario=$(stat -c "User: %U (%u) | Group: %G (%g)" $linea)
     fecha=$(stat -c %Y $linea)
+    # inodo=$(stat -c %i $linea)
 
-    echo "$nombre    $ruta    $fecha    $bytes    $permisos"
+
+    echo -e "$nombre\t$ruta\t$fecha\t$bytes\t$permisos"
     fi
-done < $fichero | sort -n
+    # Usamos -k3n para decirle a sort que ordene numéricamente (-n) usando la tercera columna (-k3), que es la de la fecha
+done < "$fichero" | sort -k3n # sort | tail -n lo q sea
 
-rm $fichero
+rm "$fichero"
+
+
+
