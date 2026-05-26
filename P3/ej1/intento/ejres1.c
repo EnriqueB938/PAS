@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
     // Recorrer argv
     int c;
-    while ((c = getopt_long(argc, argv, "hp:u:g:", long_options, NULL)) != -1)
+    while ((c = getopt_long(argc, argv, "hp:u:g:m", long_options, NULL)) != -1)
     {
         switch (c)
         {
@@ -177,41 +177,75 @@ int main(int argc, char **argv)
 
         if (mflag == true)
         {
+            struct group *grupo = getgrgid(usuario->pw_gid);
+            printf("Nombre grupo: %s\n", grupo->gr_name);
+            printf("GID: %d\n", grupo->gr_gid);
+            printf("Mostrando los miembros del grupo %s:\n", gvalue);
+            for (int i = 0; grupo->gr_mem[i] != NULL; i++)
+            {
+                printf("%s\n", grupo->gr_mem[i]);
+            }
         }
+    }
 
-        if (gvalue != NULL)
+    if (aflag == true)
+    {
+        struct passwd *usuario = getpwnam(getenv("USER"));
+
+        printf("Usuario:\n");
+        printf("  Nombre:                    %s\n", usuario->pw_gecos);
+        printf("  Login:                     %s\n", usuario->pw_name);
+        printf("  Password:                  %s\n", usuario->pw_passwd);
+        printf("  UID:                       %d\n", usuario->pw_uid);
+        printf("  Home:                      %s\n", usuario->pw_dir);
+        printf("  Shell:                     %s\n", usuario->pw_shell);
+        printf("  Número de grupo principal: %d\n", usuario->pw_gid);
+
+        if (mflag == true)
         {
-            struct group *grupo = NULL;
-            char *endptr;
-            long int GID = strtol(gvalue, &endptr, 10);
-            if ((*gvalue) != '\0' && (*endptr) == '\0')
+            struct group *grupo = getgrgid(usuario->pw_gid);
+            printf("Nombre grupo: %s\n", grupo->gr_name);
+            printf("GID: %d\n", grupo->gr_gid);
+            printf("Mostrando los miembros del grupo %s:\n", gvalue);
+            for (int i = 0; grupo->gr_mem[i] != NULL; i++)
             {
-                // Es un número
-                grupo = getgrgid(GID);
+                printf("%s\n", grupo->gr_mem[i]);
             }
-            else
+        }
+    }
+
+    if (gvalue != NULL)
+    {
+        struct group *grupo = NULL;
+        char *endptr;
+        long int GID = strtol(gvalue, &endptr, 10);
+        if ((*gvalue) != '\0' && (*endptr) == '\0')
+        {
+            // Es un número
+            grupo = getgrgid(GID);
+        }
+        else
+        {
+            // Es una cadena
+            grupo = getgrnam(gvalue);
+        }
+        if (grupo == NULL)
+        {
+            char *nombreUsuarioActual = getenv("USER");
+            struct passwd *usuarioActual = getpwnam(nombreUsuarioActual);
+            struct group *grupoActual = getgrgid(usuarioActual->pw_gid);
+            printf("Mostrando los miembros del grupo %d:\n", usuarioActual->pw_gid);
+            for (int i = 0; grupoActual->gr_mem[i] != NULL; i++)
             {
-                // Es una cadena
-                grupo = getgrnam(gvalue);
+                printf("%s\n", grupoActual->gr_mem[i]);
             }
-            if (grupo == NULL)
+        }
+        else
+        {
+            printf("Mostrando los miembros del grupo %s:\n", gvalue);
+            for (int i = 0; grupo->gr_mem[i] != NULL; i++)
             {
-                char *nombreUsuarioActual = getenv("USER");
-                struct passwd *usuarioActual = getpwnam(nombreUsuarioActual);
-                struct group *grupoActual = getgrgid(usuarioActual->pw_gid);
-                printf("Mostrando los miembros del grupo %d:\n", usuarioActual->pw_gid);
-                for (int i = 0; grupoActual->gr_mem[i] != NULL; i++)
-                {
-                    printf("%s\n", grupoActual->gr_mem[i]);
-                }
-            }
-            else
-            {
-                printf("Mostrando los miembros del grupo %s:\n", gvalue);
-                for (int i = 0; grupo->gr_mem[i] != NULL; i++)
-                {
-                    printf("%s\n", grupo->gr_mem[i]);
-                }
+                printf("%s\n", grupo->gr_mem[i]);
             }
         }
     }
