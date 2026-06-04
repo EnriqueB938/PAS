@@ -2,16 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <getopt.h> //Esto para las opciones
-#include <pwd.h>    // Esto para los usuarios
-#include <grp.h>    //Esto para los grupos
+#include <getopt.h> 
+#include <pwd.h>    
+#include <grp.h>    
 #include <sys/types.h>
 
 int main(int argc, char **argv)
 {
-    /*
-        CREACIÓN DE BANDERAS
-    */
+
     bool hflag = false;
     bool aflag = false;
     bool mflag = false;
@@ -19,10 +17,7 @@ int main(int argc, char **argv)
     char *uvalue = NULL;
     char *gvalue = NULL;
 
-    /*
-        ACTIVACIÓN DE BANDERAS SEGÚN LAS OPCIÓN/ES RECIBIDAS
-    */
-    // Crear un vector de opciones
+
     static struct option long_options[] = {
         //  {<nombre largo>, <recibe/no recibe argumento>, NULL, <nombre corto>}
         {"help", no_argument, NULL, 'h'},
@@ -31,10 +26,8 @@ int main(int argc, char **argv)
         {"allgroups", no_argument, NULL, 's'},
         {"user", required_argument, NULL, 'u'},
         {"group", required_argument, NULL, 'g'},
-        /* Necesario para indicar el final de las opciones */
         {0, 0, 0, 0}};
 
-    // Recorrer argv
     int c;
     while ((c = getopt_long(argc, argv, "hp:u:g:m", long_options, NULL)) != -1)
     {
@@ -63,7 +56,6 @@ int main(int argc, char **argv)
             break;
 
         case '?':
-            // Aquí entro si he pasado una opción con argumentos sin argumentos.
             if (optopt == 'u')
             {
                 printf("Error, la opción -u/--usuario requiere de argumento, ejemplo: ./%s -u <nombre de usuario>\n", argv[0]);
@@ -78,10 +70,6 @@ int main(int argc, char **argv)
             abort();
         }
     }
-
-    /*
-        CONTROL DE ERRORES DE LAS OPCIONES
-    */
 
     /*
         -m solo aparece con --user o --active → incompatible con -g y -s
@@ -120,15 +108,12 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    /* Sin opciones → equivale a -a -m */
-
     if (!hflag && !aflag && !mflag && !sflag && uvalue == NULL && gvalue == NULL)
     {
         aflag = true;
         mflag = true;
     }
 
-    //    AQUÍ VA EL PROGRAMA(FUNCIONALIDAD)
     if (hflag == true)
     {
         printf("************ AYUDA DEL PROGRAMA **************\n");
@@ -150,17 +135,14 @@ int main(int argc, char **argv)
         long int UID = strtol(uvalue, &endptr, 10);
         if ((*uvalue) != '\0' && (*endptr) == '\0')
         {
-            // Es un número
             usuario = getpwuid(UID);
         }
         else
         {
-            // Es una cadena
             usuario = getpwnam(uvalue);
         }
         if (usuario == NULL)
         {
-            // El usuario no existe
             char *nombreUsuarioActivo = getenv("USER");
             printf("Error, el usuario %s no existe. Mostrando información del usuario %s...\n", uvalue, nombreUsuarioActivo);
             exit(EXIT_FAILURE);
@@ -226,7 +208,6 @@ int main(int argc, char **argv)
         }
         else
         {
-            // Es una cadena
             grupo = getgrnam(gvalue);
         }
         if (grupo == NULL)

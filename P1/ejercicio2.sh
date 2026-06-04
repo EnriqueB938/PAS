@@ -59,8 +59,7 @@ else
     tar -cf $nombreFinal $directorioOrigen
     # c=crear, f=fichero //ARCHIVAR
 fi
-# tar -czf "$directorioDestino/$nombreFinal" "$directorioOrigen"
-# echo "Copia realizada en $directorioDestino/$nombreFinal."
+
 mv $nombreFinal $directorioDestino
 echo "Copia realizada en $directorioDestino/$nombreFinal."
 
