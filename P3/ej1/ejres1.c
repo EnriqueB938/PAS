@@ -19,7 +19,6 @@ int main(int argc, char **argv)
 
 
     static struct option long_options[] = {
-        //  {<nombre largo>, <recibe/no recibe argumento>, NULL, <nombre corto>}
         {"help", no_argument, NULL, 'h'},
         {"active", no_argument, NULL, 'a'},
         {"maingroup", no_argument, NULL, 'm'},

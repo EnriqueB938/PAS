@@ -148,7 +148,6 @@ int main(int argc, char **argv)
         break;
     }
 
-    // Espera del proceso padre el hijo
     pid_t flag;
     int status;
     while ((flag = wait(&status)) > 0)

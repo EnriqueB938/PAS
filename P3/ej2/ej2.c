@@ -1,5 +1,3 @@
-
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +44,7 @@ int main(int argc, char **argv)
 
         if (close(fildes[0]) == -1)
         {
-            perror("[HIJO]: Error en close(fildes[1])");
+            perror("[HIJO]: Error en close(fildes[0])");
             exit(EXIT_FAILURE);
         }
 
