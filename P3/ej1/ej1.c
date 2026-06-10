@@ -70,13 +70,6 @@ int main(int argc, char **argv)
         }
     }
 
-    /*
-        -m solo aparece con --user o --active → incompatible con -g y -s
-        -u y -a nunca aparecen juntos → incompatibles entre sí
-        -u y -g nunca aparecen juntos → incompatibles entre sí
-        -s aparece siempre solo → incompatible con todo lo demás
-        -h se ignora cualquier combinación → no hay que validar nada
-    */
     if (uvalue != NULL && gvalue != NULL)
     {
         printf("Error, las opcines -u/--usuario y -g/--grupo son incompatibles.\n");

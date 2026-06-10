@@ -11,21 +11,18 @@
 #include <time.h>
 #include <signal.h>
 
-// Las creo globales para usarlas en la función manejadora
 mqd_t mq_cola1, mq_cola2;
 
 void funcionManejadora(int signal)
 {
     printf("[Cliente]: recibida la señal de finalización %d\n", signal);
 
-    // Enviar al servidor el mensaje de parada
     if (mq_send(mq_cola1, MSG_STOP, MAX_SIZE, 0) != 0)
     {
         perror("Error al enviar el mensaje en el cliente por la cola 1");
         exit(-1);
     }
 
-    // Cerrar las colas
     if (mq_close(mq_cola1) == (mqd_t)-1)
     {
         perror("Error al cerrar la cola 1 en el servidor");
@@ -42,20 +39,15 @@ void funcionManejadora(int signal)
 
 int main(int argc, char **argv)
 {
-    // Capturar las señales SIGINT y SIGTERM
     signal(SIGINT, &funcionManejadora);
     signal(SIGTERM, &funcionManejadora);
 
-    // Nombre para la cola
     char nombreCola1[100];
     sprintf(nombreCola1, "%s-%s", COLA1, getenv("USER"));
     printf("[Cliente]: El nombre de la cola 1 es: %s\n", nombreCola1);
     char nombreCola2[100];
     sprintf(nombreCola2, "%s-%s", COLA2, getenv("USER"));
     printf("[Cliente]: El nombre de la cola 2 es: %s\n", nombreCola2);
-
-    // Conectarse a la/s cola/s
-    // mqd_t mq_cola1, mq_cola2;
 
     mq_cola1 = mq_open(nombreCola1, O_WRONLY);
     if (mq_cola1 == (mqd_t)-1)
@@ -73,29 +65,24 @@ int main(int argc, char **argv)
     }
     printf("[Cliente]: El descriptor de la cola 2 es: %d\n", (int)mq_cola2);
 
-    // Procesar (enviar y recibir mensajes)
     char mensajeEnviado[MAX_SIZE], mensajeRecibido[MAX_SIZE];
     int must_stop = 0;
     do
     {
-        // Pedir por teclado el mensaje
         printf("[Cliente]: introduce un mensaje: ");
         fgets(mensajeEnviado, MAX_SIZE, stdin);
 
-        // Enviar el mensaje por la cola 1
         if (mq_send(mq_cola1, mensajeEnviado, MAX_SIZE, 0) != 0)
         {
             perror("Error al enviar el mensaje en el cliente por la cola 1");
             exit(-1);
         }
 
-        // ¿Debo parar?
         if (strncmp(mensajeEnviado, MSG_STOP, strlen(MSG_STOP)) == 0)
         {
             must_stop = 1;
         }
 
-        // Recibir de la cola 2 el mensaje que envía el servidor
         if (must_stop == 0)
         {
             ssize_t bytes_read;
@@ -110,7 +97,6 @@ int main(int argc, char **argv)
 
     } while (must_stop == 0);
 
-    // Cerrar la/s cola/s
     if (mq_close(mq_cola1) == (mqd_t)-1)
     {
         perror("Error al cerrar la cola 1 en el servidor");

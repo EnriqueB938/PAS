@@ -15,10 +15,10 @@ fi
 directorio=$1
 
 
-fichero=$(find $directorio -type f | head -n 1) # esto es para coger el primer fichero del directorio
-lineas=$(cat $fichero | wc -l) # esto es para contar las lineas del fichero que has cogido
+fichero=$(find $directorio -type f | head -n 1) 
+lineas=$(cat $fichero | wc -l) 
 
-#Comprobar que todos los ficheros tienen las mismas líneas ---
+
 for f in $(find "$directorio" -type f)
 do
     lineas_fichero=$(cat "$f" | wc -l)
@@ -30,13 +30,13 @@ do
 done
 
 
-for ((i=1;$i<=$lineas;i=$i+1)) # hago un for que recorra tantas lineas como tenga el fichero 
+for ((i=1;$i<=$lineas;i=$i+1))  
 do
-    salida_find=$(find $directorio -type f) # hay coges todos los ficheros
+    salida_find=$(find $directorio -type f) 
     suma=0
     for alumno in $salida_find 
     do
-        asiste=$(cat $alumno | head -n $i | tail -n 1) # aqui cogo el numero segun la i
+        asiste=$(cat $alumno | head -n $i | tail -n 1) 
         let suma=$suma+$asiste 
     done
 
@@ -44,11 +44,4 @@ do
 done
 
 
-# for f in $salida_find; do
-#     lineas_fichero=$(wc -l < "$f")
-#     if [ "$lineas_fichero" -ne "$lineas" ]; then
-#         echo "Error: el fichero $f no tiene el mismo nº de líneas."
-#         exit -1
-#     fi
-# done
 

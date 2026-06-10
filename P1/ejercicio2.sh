@@ -62,5 +62,3 @@ fi
 
 mv $nombreFinal $directorioDestino
 echo "Copia realizada en $directorioDestino/$nombreFinal."
-
-# numaleatorio=$(((RANDOM % 900)+100))
