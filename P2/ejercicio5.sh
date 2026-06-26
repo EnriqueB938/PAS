@@ -11,7 +11,7 @@ function convertirMascara()
     echo $suma
 }
 
-interfaces=$(ifconfig | grep -E "^[[:alpha:]]" | cut -d " " -f 1 | tr -d ':')
+interfaces=$(ifconfig | grep -E "^[[:alpha:]]" | cut -d " " -f 1 | tr -d ':')   
 
 for interfaz in $interfaces
 do

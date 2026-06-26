@@ -18,7 +18,7 @@ echo "4. Usuarios con un GID mayor que 1000:"
 cat /etc/passwd | cut -d ":" -f 1,4 | grep -E ":[0-9]{4,}$" | grep -v ":1000$" | cut -d ":" -f 1
 
 echo "5. Usuarios y su UID con una ',' en su gecos:"
- cat /etc/passwd | cut -d ":" -f 1,3,5 | grep -E ".*:.*:.*," | cut -d ":" -f 1,2 | sed -rne 's/:/, /p'
+cat /etc/passwd | cut -d ":" -f 1,3,5 | grep -E ".*:.*:.*," | cut -d ":" -f 1,2 | sed -rne 's/:/, /p'
 #usuario:*:UID:GID:GECOS:HOME:SHELL
 #gecos es el unico que puede estar vacío
 
